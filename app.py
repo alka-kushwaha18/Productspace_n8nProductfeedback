@@ -19,7 +19,7 @@ if st.button("Analyze Feedback"):
     else:
         with st.spinner("Analyzing user feedback..."):
 
-            url = "https://alka11.app.n8n.cloud/webhook-test/feedback-analysis"
+            url = "https://alka11.app.n8n.cloud/webhook/feedback-analysis"
 
             response = requests.post(
                 url,
