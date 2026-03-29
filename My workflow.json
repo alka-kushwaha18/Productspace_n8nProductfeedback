@@ -1,0 +1,191 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "915515ea-5150-4c95-ba34-ed3fdd98cec6",
+              "name": "feedback",
+              "value": "={{$json[\"body\"][\"feedback\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "04eb8979-dfbe-4032-aadb-1d41cf90ccfe",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "8be46f94-6b74-490e-9a6d-ada924a35bef",
+      "name": "Feedback Input (Collector Agent)"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are a product manager. Analyze the following user feedback and return ONLY this format: 🔴 Top 3 Problems: - ... - ... - ... 📊 Key Themes: - ... - ... ⚠️ Critical Issues: - ... - ... 💡 What Should Be Built Next: 1. ... 2. ... 3. ... Keep it concise and actionable. Feedback: {{$node[\"Feedback Input (Collector Agent)\"].json[\"feedback\"]}}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "e23a61dc-63c2-4a30-8ab3-433af873dc25",
+      "name": "Insight Agent (Theme + Problems)",
+      "credentials": {
+        "openAiApi": {
+          "id": "vv2RCYXaHbPFbxs6",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are a product manager.\n\nYou are given user feedback.\n\nAnalyze it and provide:\n\n🔴 Top 3 Problems:\n- ...\n\n📊 Key Themes:\n- ...\n\n⚠️ Critical Issues:\n- ...\n\n💡 What Should Be Built Next:\n1.\n2.\n3.\n\nBe specific. Do NOT say you lack data.\nUse the feedback directly.\n\nFeedback:\n{{$node[\"Feedback Input (Collector Agent)\"].json[\"feedback\"]}}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        976,
+        0
+      ],
+      "id": "68accc5d-86ad-402c-9f3d-5cec5be5ecaa",
+      "name": "Decision Agent (Prioritization)",
+      "credentials": {
+        "openAiApi": {
+          "id": "vv2RCYXaHbPFbxs6",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "feedback-analysis",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "8036d28e-d0ad-4ea1-be9c-ff83189ea53a",
+      "name": "Webhook",
+      "webhookId": "3d427cd8-7a04-41ed-a51c-b02f7b5143e0"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"result\": {{ JSON.stringify($json['output'][0]['content'][0]['text']) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1328,
+        0
+      ],
+      "id": "6330d6a3-b4ae-4470-8be7-96e357f9fb3e",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Feedback Input (Collector Agent)": {
+      "main": [
+        [
+          {
+            "node": "Insight Agent (Theme + Problems)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insight Agent (Theme + Problems)": {
+      "main": [
+        [
+          {
+            "node": "Decision Agent (Prioritization)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Feedback Input (Collector Agent)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decision Agent (Prioritization)": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "3c01351c-29df-4824-a4a6-9802b7f6e1ca",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8e5884959ee0551c05f45543c8d4e1af170dd9b3f3c388bb3052a875bfabd428"
+  },
+  "id": "XaN7xNbpSKe06V6I",
+  "tags": []
+}
