@@ -1,11 +1,35 @@
 import streamlit as st
 import requests
 def is_valid_feedback(feedback):
-    blocked_words = ["ignore", "say", "repeat", "just output", "write a song"]
+    feedback_lower = feedback.lower()
 
-    for word in blocked_words:
-        if word in feedback.lower():
+    # 1️⃣ Too short → reject
+    if len(feedback.strip()) < 20:
+        return False
+
+    # 2️⃣ Must contain product-related signals
+    product_keywords = [
+        "app", "feature", "bug", "issue", "error",
+        "payment", "login", "crash", "slow",
+        "support", "checkout", "onboarding", "ui", "ux"
+    ]
+
+    if not any(word in feedback_lower for word in product_keywords):
+        return False
+
+    # 3️⃣ Prompt injection / instruction patterns → reject
+    blocked_patterns = [
+        "ignore previous",
+        "just output",
+        "repeat after me",
+        "write a song",
+        "say this"
+    ]
+
+    for pattern in blocked_patterns:
+        if pattern in feedback_lower:
             return False
+
     return True
 st.set_page_config(page_title="Decision Intelligence Agent", layout="wide")
 
