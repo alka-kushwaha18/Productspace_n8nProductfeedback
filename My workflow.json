@@ -8,7 +8,7 @@
             {
               "id": "915515ea-5150-4c95-ba34-ed3fdd98cec6",
               "name": "feedback",
-              "value": "={{$json[\"body\"][\"feedback\"]}}",
+              "value": "={{$json[\"feedback\"]}}",
               "type": "string"
             },
             {
@@ -181,7 +181,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "d368cd6c-a989-4df1-9f34-432e329fed9d",
+  "versionId": "e3142a09-6ea0-4eed-8325-fc486e7dcde2",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8e5884959ee0551c05f45543c8d4e1af170dd9b3f3c388bb3052a875bfabd428"
