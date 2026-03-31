@@ -116,7 +116,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={\n  \"result\": {{ JSON.stringify($json['output'][0]['content'][0]['text']) }}\n}",
+        "responseBody": "={\n  \"result\": {{$json[\"output\"][0][\"content\"][0][\"text\"]}}\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.respondToWebhook",
@@ -181,7 +181,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "9d85af68-d923-44d2-a11b-9f823e03692d",
+  "versionId": "d368cd6c-a989-4df1-9f34-432e329fed9d",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8e5884959ee0551c05f45543c8d4e1af170dd9b3f3c388bb3052a875bfabd428"
