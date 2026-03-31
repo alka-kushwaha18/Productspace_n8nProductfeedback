@@ -50,7 +50,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={\n  \"result\": \"{{ $json.candidates[0].content.parts[0].text || 'No analysis generated' }}\"\n}",
+        "responseBody": "={\n  \"result\": \"{{ $json.content.parts[0].text || 'No analysis generated' }}\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.respondToWebhook",
@@ -137,7 +137,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "56b96e40-f37f-4296-9ef2-040ed8991a29",
+  "versionId": "92bc6ae4-6870-4d1b-ae87-60079d9ed984",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8e5884959ee0551c05f45543c8d4e1af170dd9b3f3c388bb3052a875bfabd428"
