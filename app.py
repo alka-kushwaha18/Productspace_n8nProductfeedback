@@ -60,7 +60,9 @@ if st.button("Analyze Feedback"):
             )
 
             result = response.json()["result"]
-
+        if "Invalid feedback" in result:
+            st.error("Please enter valid product-related feedback.")
+            st.stop()
             st.success("Analysis Complete")
 
             # ---------- METRICS ----------
