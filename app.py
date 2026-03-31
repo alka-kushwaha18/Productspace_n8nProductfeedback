@@ -70,7 +70,6 @@ if st.button("Analyze Feedback"):
                 json={"feedback": feedback}
             )
 
-            # st.write(response.text)
 
             result = response.json()["result"]
 
