@@ -1,6 +1,12 @@
 import streamlit as st
 import requests
+def is_valid_feedback(feedback):
+    blocked_words = ["ignore", "say", "repeat", "just output", "write a song"]
 
+    for word in blocked_words:
+        if word in feedback.lower():
+            return False
+    return True
 st.set_page_config(page_title="Decision Intelligence Agent", layout="wide")
 
 # ---------- HEADER ----------
@@ -16,6 +22,9 @@ if st.button("Analyze Feedback"):
 
     if feedback.strip() == "":
         st.warning("Please enter some feedback")
+    elif not is_valid_feedback(feedback):   # ✅ ADD THIS LINE
+        st.error("Invalid feedback detected. Please enter genuine product feedback.")
+        st.stop()    
     else:
         with st.spinner("Analyzing user feedback..."):
 
