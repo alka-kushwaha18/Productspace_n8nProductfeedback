@@ -71,7 +71,26 @@ if st.button("Analyze Feedback"):
             )
 
 
-            result = response.json()["result"]
+            # result = response.json()["result"]
+
+            data = response.json()
+
+            # Safety check
+            if "result" not in data:
+                st.error("Invalid response from server")
+                st.stop()
+            
+            result = data["result"]
+            
+            # Handle double-encoded JSON (VERY IMPORTANT)
+            if isinstance(result, str) and result.startswith("{"):
+                import json
+                try:
+                    result = json.loads(result)["result"]
+                except:
+                    pass
+
+            
 
             # 🔹 AI-level guardrail
             if "Invalid feedback" in result:
