@@ -1,5 +1,7 @@
 import streamlit as st
 import requests
+
+# ---------- GUARDRAIL FUNCTION ----------
 def is_valid_feedback(feedback):
     feedback_lower = feedback.lower()
 
@@ -17,7 +19,7 @@ def is_valid_feedback(feedback):
     if not any(word in feedback_lower for word in product_keywords):
         return False
 
-    # 3️⃣ Prompt injection / instruction patterns → reject
+    # 3️⃣ Prompt injection patterns → reject
     blocked_patterns = [
         "ignore previous",
         "just output",
@@ -31,6 +33,9 @@ def is_valid_feedback(feedback):
             return False
 
     return True
+
+
+# ---------- APP CONFIG ----------
 st.set_page_config(page_title="Decision Intelligence Agent", layout="wide")
 
 # ---------- HEADER ----------
@@ -42,13 +47,19 @@ st.divider()
 # ---------- INPUT ----------
 feedback = st.text_area("Paste user feedback here:", height=150)
 
+# ---------- BUTTON ----------
 if st.button("Analyze Feedback"):
 
+    # 🔹 Empty input
     if feedback.strip() == "":
         st.warning("Please enter some feedback")
-    elif not is_valid_feedback(feedback):   # ✅ ADD THIS LINE
+
+    # 🔹 Guardrail check
+    elif not is_valid_feedback(feedback):
         st.error("Invalid feedback detected. Please enter genuine product feedback.")
-        st.stop()    
+        st.stop()
+
+    # 🔹 Main logic
     else:
         with st.spinner("Analyzing user feedback..."):
 
@@ -60,9 +71,13 @@ if st.button("Analyze Feedback"):
             )
 
             result = response.json()["result"]
-        if "Invalid feedback" in result:
-            st.error("Please enter valid product-related feedback.")
-            st.stop()
+
+            # 🔹 AI-level guardrail
+            if "Invalid feedback" in result:
+                st.error("Please enter valid product-related feedback.")
+                st.stop()
+
+            # ---------- SUCCESS ----------
             st.success("Analysis Complete")
 
             # ---------- METRICS ----------
@@ -105,35 +120,25 @@ if st.button("Analyze Feedback"):
                 elif "What Should Be Built Next" in sec:
                     actions = extract_items(sec)
 
-            # ---------- DASHBOARD LAYOUT ----------
+            # ---------- DASHBOARD ----------
             col_left, col_right = st.columns([2, 1])
 
-            # ===== LEFT SIDE =====
+            # LEFT SIDE
             with col_left:
-
                 st.subheader("🔴 Top Problems")
-
                 for problem in top_problems:
-                    with st.container():
-                        st.error(problem)
+                    st.error(problem)
 
                 st.subheader("📊 Key Themes")
-
                 for theme in themes:
-                    with st.container():
-                        st.success(theme)
+                    st.success(theme)
 
                 st.subheader("💡 Recommended Actions")
-
                 for action in actions:
-                    with st.container():
-                        st.info(action)
+                    st.info(action)
 
-            # ===== RIGHT SIDE =====
+            # RIGHT SIDE
             with col_right:
-
                 st.subheader("⚠️ Critical Issues")
-
                 for issue in critical:
-                    with st.container():
-                        st.warning(issue)
+                    st.warning(issue)
